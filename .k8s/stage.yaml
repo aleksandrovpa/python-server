@@ -38,7 +38,7 @@ metadata:
   namespace: default
 spec:
   ports:
-  - port: 5555
+  - port: 8080
     targetPort: 5555
   selector:
     app: python-server
