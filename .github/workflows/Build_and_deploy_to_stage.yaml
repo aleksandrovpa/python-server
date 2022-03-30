@@ -1,4 +1,4 @@
-name: Build_and_deploy
+name: Build_and_deploy_to_stage
 on:
   workflow_dispatch:
     inputs:
@@ -14,7 +14,7 @@ jobs:
 
     - name: Python Lint
       uses: cclauss/Find-Python-syntax-errors-action@master
-      
+
     - name: Docker Login
       uses: docker/login-action@v1.10.0
       with:
@@ -24,13 +24,14 @@ jobs:
     - name: Docker Build
       run: docker build  -t ${{ secrets.DOCKER_LOGIN }}/python_server:${{ github.event.inputs.image_version }} .
 
-    - name: Scan Docker Image
-      uses: azure/container-scan@v0
-      with:
-        image-name: ${{ secrets.DOCKER_LOGIN }}/python_server:${{ github.event.inputs.image_version }}
-
     - name: Docker Push
       run: |
         docker tag  ${{ secrets.DOCKER_LOGIN }}/python_server:${{ github.event.inputs.image_version }} ${{ secrets.DOCKER_LOGIN }}/python_server:latest
         docker push ${{ secrets.DOCKER_LOGIN }}/python_server:${{ github.event.inputs.image_version }}
         docker push ${{ secrets.DOCKER_LOGIN }}/python_server:latest
+    
+    # - name: Deploy to stage
+    #   run: |
+    #     mkdir -p ~/.kube/
+    #     echo ${{ kube_config_stage }} | base64 --decode >~/.kube/config
+    #     kubectl apply -f .k8s/stage.yaml
