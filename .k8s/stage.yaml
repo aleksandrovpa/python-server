@@ -16,10 +16,9 @@ spec:
       labels:
         app: python-server
     spec:
-      serviceAccountName: python-server
       containers:
       - name: python-server
-        image: skaalex/python_server:0.0.1
+        image: skaalex/python_server:0.0.3
         ports:
         - containerPort: 5555
           protocol: TCP
@@ -42,9 +41,3 @@ spec:
     targetPort: 5555
   selector:
     app: python-server
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: python-server
-  namespace: default
